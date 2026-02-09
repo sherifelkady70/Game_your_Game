@@ -1,5 +1,7 @@
 package com.example.game_your_game.games.data.repository
 
+import com.example.game_your_game.core.utilits.NetworkStateResource
+import com.example.game_your_game.core.utilits.genericApiCall
 import com.example.game_your_game.games.data.mapper.toDomain
 import com.example.game_your_game.games.data.remote.GamesApi
 import com.example.game_your_game.games.domain.model.Game
@@ -12,13 +14,9 @@ class GamesRepositoryImpl @Inject constructor(
     private val api: GamesApi
 ) : GamesRepository {
 
-    override fun getGamesByGenre(genreId: Int): Flow<Result<List<Game>>> = flow {
-        try {
-            val response = api.getGamesByGenre(genreId)
-            val list = response.results?.map { it.toDomain() } ?: emptyList()
-            emit(Result.success(list))
-        } catch (e: Exception) {
-            emit(Result.failure(e))
-        }
-    }
+    override fun getGamesByGenre(genreId: Int): Flow<NetworkStateResource<List<Game>>> =
+        genericApiCall(
+            apiCall = {api.getGamesByGenre(genreId)},
+            mapper = { it.results?.map { dto -> dto.toDomain() } as List<Game> }
+        )
 }
