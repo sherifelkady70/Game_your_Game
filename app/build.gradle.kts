@@ -6,10 +6,22 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+// RAWG API key: set in gradle.properties (RAWG_API_KEY=your_key) or in local.properties (RAWG_API_KEY=your_key)
+val rawgApiKey: String = project.properties["RAWG_API_KEY"].toString()
+
+//    run {
+//    val fromProject = project.findProperty("RAWG_API_KEY") as? String
+//    if (!fromProject.isNullOrBlank()) return@run fromProject.trim()
+//    val localFile = rootProject.file("local.properties")
+//    if (localFile.exists()) {
+//        java.util.Properties().apply { load(localFile.inputStream()) }.getProperty("RAWG_API_KEY")?.trim().orEmpty()
+//    } else ""
+//}
+
 android {
+
     namespace = "com.example.game_your_game"
     compileSdk = 36
-
     defaultConfig {
         applicationId = "com.example.game_your_game"
         minSdk = 24
@@ -18,6 +30,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "RAWG_API_KEY", "\"$rawgApiKey\"")
+
     }
 
     buildTypes {
@@ -38,13 +53,16 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
