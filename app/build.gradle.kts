@@ -58,34 +58,18 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":feature:genres"))
+    implementation(project(":feature:games"))
+    implementation(project(":feature:game-details"))
+
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
 
-    // Hilt
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
-
-    // Retrofit & OkHttp
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
-
-    // Coroutines (Flows are part of kotlinx-coroutines-core)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Coil
-    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
