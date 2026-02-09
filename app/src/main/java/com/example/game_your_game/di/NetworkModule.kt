@@ -1,6 +1,7 @@
 package com.example.game_your_game.di
 
-import com.example.game_your_game.data.api.ApiService
+import com.example.game_your_game.BuildConfig
+import com.example.game_your_game.data.remote.GameApiServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,20 +17,34 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://api.example.com/"
+    private const val BASE_URL = "https://api.rawg.io/api/"
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .addInterceptor(
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-        )
-        .build()
+    fun provideOkHttpClient(): OkHttpClient {
+//        val apiKey = BuildConfig.RAWG_API_KEY
+//            .takeIf { it.isNotBlank() }
+//            .orEmpty()
+        return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+//            .addInterceptor { chain ->
+//                val original = chain.request()
+//                val newUrl = if (apiKey.isNotBlank()) {
+//                    original.url.newBuilder().addQueryParameter("key", apiKey).build()
+//                } else {
+//                    original.url
+//                }
+//                chain.proceed(original.newBuilder().url(newUrl).build())
+//            }
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
+            .build()
+    }
 
     @Provides
     @Singleton
@@ -41,6 +56,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService =
-        retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): GameApiServices =
+        retrofit.create(GameApiServices::class.java)
 }
+
