@@ -1,4 +1,4 @@
-package com.example.game_your_game.presentation.screens.genres
+package com.example.game_your_game.games
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,23 +7,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.game_your_game.presentation.navigation.NavRoutes
-import com.example.game_your_game.presentation.screens.genres.components.GenresListContent
-import com.example.game_your_game.presentation.theme.ScreenBackground
 import androidx.navigation.NavController
+import com.example.game_your_game.core.navigation.NavRoutes
+import com.example.game_your_game.core.theme.ScreenBackground
+import com.example.game_your_game.games.components.GamesListContent
 
 @Composable
-fun GenresScreen(
+fun GamesListScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: GenresViewModel = hiltViewModel()
+    viewModel: GamesListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
-    GenresListContent(
+    GamesListContent(
         state = state,
-        onGenreClick = { genre ->
-            navController.navigate(NavRoutes.gamesList(genre.id))
+        onGameClick = { game ->
+            navController.navigate(NavRoutes.gameDetails(game.id))
         },
         modifier = modifier
             .fillMaxSize()
