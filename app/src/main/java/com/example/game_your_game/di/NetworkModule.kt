@@ -22,22 +22,23 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-//        val apiKey = BuildConfig.RAWG_API_KEY
-//            .takeIf { it.isNotBlank() }
-//            .orEmpty()
+        // Null-safe and ignore literal "null" string (from missing gradle property)
+        val apiKey = (BuildConfig.RAWG_API_KEY ?: "")
+            .takeIf { it.isNotBlank() && it != "null" }
+            ?: ""
         return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-//            .addInterceptor { chain ->
-//                val original = chain.request()
-//                val newUrl = if (apiKey.isNotBlank()) {
-//                    original.url.newBuilder().addQueryParameter("key", apiKey).build()
-//                } else {
-//                    original.url
-//                }
-//                chain.proceed(original.newBuilder().url(newUrl).build())
-//            }
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val newUrl = if (apiKey.isNotBlank()) {
+                    original.url.newBuilder().addQueryParameter("key", apiKey).build()
+                } else {
+                    original.url
+                }
+                chain.proceed(original.newBuilder().url(newUrl).build())
+            }
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY

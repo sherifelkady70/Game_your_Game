@@ -6,17 +6,16 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-// RAWG API key: set in gradle.properties (RAWG_API_KEY=your_key) or in local.properties (RAWG_API_KEY=your_key)
-val rawgApiKey: String = project.properties["RAWG_API_KEY"].toString()
+val rawgApiKey: String = run {
+    val fromProject = project.findProperty("RAWG_API_KEY") as? String
+    if (!fromProject.isNullOrBlank()) return@run fromProject.trim()
+    val localFile = rootProject.file("local.properties")
+    if (!localFile.exists()) return@run ""
+    val line = localFile.readLines().firstOrNull { it.trimStart().startsWith("RAWG_API_KEY=") }
+    val value = line?.substringAfter("=", "")?.trim()?.trim('"') ?: ""
+    value.takeIf { it.isNotBlank() } ?: ""
+}
 
-//    run {
-//    val fromProject = project.findProperty("RAWG_API_KEY") as? String
-//    if (!fromProject.isNullOrBlank()) return@run fromProject.trim()
-//    val localFile = rootProject.file("local.properties")
-//    if (localFile.exists()) {
-//        java.util.Properties().apply { load(localFile.inputStream()) }.getProperty("RAWG_API_KEY")?.trim().orEmpty()
-//    } else ""
-//}
 
 android {
 
@@ -31,7 +30,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "RAWG_API_KEY", "\"$rawgApiKey\"")
+        // Quoted so BuildConfig always has a valid string literal (never unquoted null)
+        buildConfigField("String", "RAWG_API_KEY", "\"${rawgApiKey.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
 
     }
 
