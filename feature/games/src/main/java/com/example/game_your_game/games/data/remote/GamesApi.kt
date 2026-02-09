@@ -1,0 +1,14 @@
+package com.example.game_your_game.games.data.remote
+
+import com.example.game_your_game.games.data.remote.dto.GamesResponseDto
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+interface GamesApi {
+
+    @GET("games")
+    suspend fun getGamesByGenre(
+        @Query("genres") genreId: Int,
+        @Query("page_size") pageSize: Int = 20
+    ): GamesResponseDto
+}

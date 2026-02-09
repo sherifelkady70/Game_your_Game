@@ -21,3 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Game_your_Game"
 include(":app")
+include(":core")
+include(":feature:genres")
+include(":feature:games")
+include(":feature:game-details")
