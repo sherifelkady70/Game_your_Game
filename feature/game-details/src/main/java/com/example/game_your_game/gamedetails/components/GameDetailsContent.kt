@@ -93,7 +93,7 @@ private fun GameDetailsBody(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = details.description ?: "Not Avalibale Right Now",
+                text = details.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextPrimary
             )

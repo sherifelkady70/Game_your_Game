@@ -77,6 +77,8 @@ fun GenresListContent(
 //                    }
                 }
             }
+
+            is GenresState.Empty -> TODO()
         }
     }
 }
