@@ -1,5 +1,6 @@
 package com.example.game_your_game.core.utilits
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -13,14 +14,12 @@ inline fun <T, R> apiCallWithHandlingOffline(
     if (cached != null) {
         emit(NetworkStateResource.Success(cached))
     }
-    try {
-        val response = apiCall()
-        val result = mapAndSave(response)
-        emit(NetworkStateResource.Success(result))
-    } catch (e: Exception) {
-        if (cached != null) {
-            emit(NetworkStateResource.Success(cached))
-        } else {
+    else {
+        try {
+            val response = apiCall()
+            val result = mapAndSave(response)
+            emit(NetworkStateResource.Success(result))
+        } catch (e: Exception) {
             emit(NetworkStateResource.Error(e))
         }
     }
