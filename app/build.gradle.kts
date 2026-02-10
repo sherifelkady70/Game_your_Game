@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,7 +17,10 @@ val rawgApiKey: String = run {
     val value = line?.substringAfter("=", "")?.trim()?.trim('"') ?: ""
     value.takeIf { it.isNotBlank() } ?: ""
 }
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
 
+val baseUrl = localProperties.getProperty("BASE_URL") ?: ""
 
 android {
 
@@ -32,7 +37,7 @@ android {
 
         // Quoted so BuildConfig always has a valid string literal (never unquoted null)
         buildConfigField("String", "RAWG_API_KEY", "\"${rawgApiKey.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
-
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {

@@ -1,6 +1,7 @@
 package com.example.game_your_game.di
 
 import com.example.game_your_game.BuildConfig
+import com.example.game_your_game.core.di.BASE_URL
 import com.example.game_your_game.core.di.RawgApiKey
 import dagger.Module
 import dagger.Provides
@@ -17,4 +18,11 @@ object ApiKeyModule {
     @RawgApiKey
     fun provideRawgApiKey(): String =
         (BuildConfig.RAWG_API_KEY ?: "").takeIf { it.isNotBlank() && it != "null" } ?: ""
+
+
+    @Provides
+    @Singleton
+    @BASE_URL
+    fun provideBASEURL(): String =
+        (BuildConfig.BASE_URL )
 }

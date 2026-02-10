@@ -5,3 +5,8 @@ import javax.inject.Qualifier
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RawgApiKey
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BASE_URL
