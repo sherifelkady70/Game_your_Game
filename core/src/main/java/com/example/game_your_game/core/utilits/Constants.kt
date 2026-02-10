@@ -1,0 +1,22 @@
+package com.example.game_your_game.core.utilits
+
+object Constants {
+    const val GENRES = "genres"
+    const val GAMES = "games"
+
+    const val GAME_ID = "gameId"
+
+    const val GAME_ID_REQUIRED = "gameId required"
+
+    const val EMPTY_MESSAGE = "No data found ... try again"
+
+    const val GENERAL_ERROR_MESSAGE = "Unknown error"
+
+
+    const val GENRE_ID ="genreId"
+    const val GENRE_ID_REQUIRED = "genreId required"
+
+     const val PAGE_SIZE = 10
+
+
+}
