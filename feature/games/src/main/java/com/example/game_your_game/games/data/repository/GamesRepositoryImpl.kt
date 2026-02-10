@@ -14,9 +14,9 @@ class GamesRepositoryImpl @Inject constructor(
     private val api: GamesApi
 ) : GamesRepository {
 
-    override fun getGamesByGenre(genreId: Int): Flow<NetworkStateResource<List<Game>>> =
+    override fun getGamesByGenre(genreId: Int, page: Int): Flow<NetworkStateResource<List<Game>>> =
         genericApiCall(
-            apiCall = {api.getGamesByGenre(genreId)},
-            mapper = { it.results?.map { dto -> dto.toDomain() } as List<Game> }
+            apiCall = { api.getGamesByGenre(genreId, page = page) },
+            mapper = { it.results?.map { dto -> dto.toDomain() } ?: emptyList() }
         )
 }

@@ -9,6 +9,7 @@ interface GamesApi {
     @GET("games")
     suspend fun getGamesByGenre(
         @Query("genres") genreId: Int,
-        @Query("page_size") pageSize: Int = 10
+        @Query("page_size") pageSize: Int = 10,
+        @Query("page") page: Int
     ): GamesResponseDto
 }
