@@ -11,13 +11,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val PAGE_SIZE = 10
+
 sealed interface GamesListState {
     data object Loading : GamesListState
-    data class Success(val games: List<Game>) : GamesListState
+    data class Success(
+        val games: List<Game>,
+        val isLoadingMore: Boolean = false,
+        val hasMore: Boolean = true
+    ) : GamesListState
     data class Error(val message: String) : GamesListState
 }
 
@@ -28,6 +33,7 @@ class GamesListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val genreId: Int = checkNotNull(savedStateHandle["genreId"]) { "genreId required" }
+    private var currentPage = 1
 
     private val _state = MutableStateFlow<GamesListState>(GamesListState.Loading)
     val state: StateFlow<GamesListState> = _state.asStateFlow()
@@ -36,20 +42,70 @@ class GamesListViewModel @Inject constructor(
         loadGames()
     }
 
+    fun setIntent(action : GamesScreenIntent){
+        when(action){
+            is GamesScreenIntent.OnLoadMore -> loadMoreGames()
+        }
+    }
     fun loadGames() {
         viewModelScope.launch {
+            currentPage = 1
             _state.update { GamesListState.Loading }
-            getGamesByGenreUseCase(genreId).collect { result ->
-                when(result){
-                    is NetworkStateResource.Success<*> -> {
-                        _state.update { GamesListState.Success(result.data as List<Game>) }
+            getGamesByGenreUseCase(genreId, currentPage).collect { result ->
+                when (result) {
+                    is NetworkStateResource.Success -> {
+                        val list = result.data as List<Game>
+                        _state.update {
+                            GamesListState.Success(
+                                games = list,
+                                hasMore = list.size >= PAGE_SIZE
+                            )
+                        }
                     }
                     is NetworkStateResource.Error -> {
-                        _state.update { GamesListState.Error(result.throwable.message ?: "UnKnown Error") }
+                        _state.update {
+                            GamesListState.Error(result.throwable.message ?: "Unknown Error")
+                        }
                     }
                     is NetworkStateResource.Loading -> {
                         _state.update { GamesListState.Loading }
                     }
+                }
+            }
+        }
+    }
+
+    private fun loadMoreGames() {
+        val current = _state.value
+        if (current !is GamesListState.Success ||
+            current.isLoadingMore ||
+            !current.hasMore
+        ) return
+
+        viewModelScope.launch {
+            _state.update {
+                (it as? GamesListState.Success)?.copy(isLoadingMore = true) ?: it
+            }
+            getGamesByGenreUseCase(genreId, currentPage + 1).collect { result ->
+                when (result) {
+                    is NetworkStateResource.Success -> {
+                        val newList = result.data as List<Game>
+                        currentPage += 1
+                        _state.update {
+                            val prev = it as? GamesListState.Success ?: return@update it
+                            GamesListState.Success(
+                                games = prev.games + newList,
+                                isLoadingMore = false,
+                                hasMore = newList.size >= PAGE_SIZE
+                            )
+                        }
+                    }
+                    is NetworkStateResource.Error -> {
+                        _state.update {
+                            (it as? GamesListState.Success)?.copy(isLoadingMore = false) ?: it
+                        }
+                    }
+                    is NetworkStateResource.Loading -> { /* keep isLoadingMore true */ }
                 }
             }
         }

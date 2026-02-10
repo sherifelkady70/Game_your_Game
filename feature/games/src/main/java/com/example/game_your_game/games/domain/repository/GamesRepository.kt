@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GamesRepository {
 
-    fun getGamesByGenre(genreId: Int): Flow<NetworkStateResource<List<Game>>>
+    fun getGamesByGenre(genreId: Int, page: Int): Flow<NetworkStateResource<List<Game>>>
 }

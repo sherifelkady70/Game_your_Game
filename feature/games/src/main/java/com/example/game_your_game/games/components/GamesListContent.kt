@@ -4,25 +4,31 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.game_your_game.games.domain.model.Game
 import com.example.game_your_game.core.theme.TextSecondary
 import com.example.game_your_game.games.GamesListState
+import com.example.game_your_game.games.domain.model.Game
 
 @Composable
 fun GamesListContent(
     state: GamesListState,
     onGameClick: (Game) -> Unit,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -39,7 +45,22 @@ fun GamesListContent(
                         color = TextSecondary
                     )
                 } else {
+                    val listState = rememberLazyListState()
+                    val shouldLoadMore by remember {
+                        derivedStateOf {
+                            val layoutInfo = listState.layoutInfo
+                            val totalItems = layoutInfo.totalItemsCount
+                            val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                            totalItems > 0 && lastVisibleIndex >= totalItems - 2
+                        }
+                    }
+                    LaunchedEffect(shouldLoadMore, state.isLoadingMore, state.hasMore) {
+                        if (shouldLoadMore && state.hasMore && !state.isLoadingMore) {
+                            onLoadMore()
+                        }
+                    }
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(vertical = 8.dp),
@@ -50,6 +71,20 @@ fun GamesListContent(
                                 game = game,
                                 onClick = { onGameClick(game) }
                             )
+                        }
+                        if (state.isLoadingMore) {
+                            item(key = "loading_more") {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
                         }
                     }
                 }

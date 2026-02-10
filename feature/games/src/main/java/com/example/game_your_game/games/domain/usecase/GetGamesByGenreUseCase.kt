@@ -9,6 +9,6 @@ import javax.inject.Inject
 class GetGamesByGenreUseCase @Inject constructor(
     private val repository: GamesRepository
 ) {
-    operator fun invoke(genreId: Int): Flow<NetworkStateResource<List<Game>>> =
-        repository.getGamesByGenre(genreId)
+    operator fun invoke(genreId: Int, page: Int): Flow<NetworkStateResource<List<Game>>> =
+        repository.getGamesByGenre(genreId, page)
 }
