@@ -1,4 +1,4 @@
-package com.example.game_your_game.games.components
+package com.example.game_your_game.games.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,20 +20,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.game_your_game.core.theme.GameYourGameTheme
 import com.example.game_your_game.core.theme.TextSecondary
-import com.example.game_your_game.games.GamesListState
 import com.example.game_your_game.games.domain.model.Game
+import com.example.game_your_game.games.presentation.intent.GamesListState
 
 private const val ERROR_MESSAGE = "Something wrong ... try again"
-
 @Composable
 fun GamesListContent(
+    modifier: Modifier = Modifier,
     state: GamesListState,
     onGameClick: (Game) -> Unit,
     onLoadMore: () -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -44,11 +45,11 @@ fun GamesListContent(
             is GamesListState.Success -> {
                 if (state.games.isEmpty()) {
                     Text(
-                        text = "No games found",
+                        text = "No games found",//
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
-                } else {
+                } else {//
                     val listState = rememberLazyListState()
                     val shouldLoadMore by remember {
                         derivedStateOf {
@@ -98,6 +99,11 @@ fun GamesListContent(
                 onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
+            is GamesListState.Empty -> ErrorWithRetry(
+                message = state.message,
+                onRetry = onRetry,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
@@ -121,5 +127,16 @@ private fun ErrorWithRetry(
         Button(onClick = onRetry) {
             Text("Retry")
         }
+    }
+}
+@Suppress("Preview")
+@Preview(showBackground = true)
+@Composable
+private fun ErrorWithRetryPreview() {
+    GameYourGameTheme {
+        ErrorWithRetry(
+            message = "Something went wrong",
+            onRetry = {}
+        )
     }
 }

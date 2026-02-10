@@ -7,21 +7,23 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 abstract class GenresModule {
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindGenresRepository(impl: GenresRepositoryImpl): GenresRepository
 
     companion object {
         @Provides
-        @Singleton
+        @ViewModelScoped
         fun provideGenresApi(retrofit: Retrofit): GenresApi =
             retrofit.create(GenresApi::class.java)
     }

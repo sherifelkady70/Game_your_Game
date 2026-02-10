@@ -1,4 +1,4 @@
-package com.example.game_your_game.genres
+package com.example.game_your_game.games.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,22 +10,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.game_your_game.core.navigation.NavRoutes
 import com.example.game_your_game.core.theme.ScreenBackground
-import com.example.game_your_game.genres.components.GenresListContent
+import com.example.game_your_game.games.presentation.viewmodel.GamesListViewModel
+import com.example.game_your_game.games.presentation.intent.GamesScreenIntent
+import com.example.game_your_game.games.presentation.components.GamesListContent
 
 @Composable
-fun GenresScreen(
+fun GamesListScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: GenresViewModel = hiltViewModel()
+    viewModel: GamesListViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
-    GenresListContent(
+    GamesListContent(
         state = state,
-        onGenreClick = { genre ->
-            navController.navigate(NavRoutes.gamesList(genre.id))
+        onGameClick = { game ->
+            navController.navigate(NavRoutes.gameDetails(game.id))
         },
-        onRetry = { viewModel.setIntent(GenresScreenIntent.OnRetry) },
+        onLoadMore = { viewModel.setIntent(GamesScreenIntent.OnLoadMore) },
+        onRetry = { viewModel.setIntent(GamesScreenIntent.OnRetry) },
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)

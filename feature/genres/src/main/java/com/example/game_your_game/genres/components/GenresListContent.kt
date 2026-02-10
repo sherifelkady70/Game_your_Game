@@ -16,17 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.game_your_game.core.theme.TextSecondary
-import com.example.game_your_game.genres.GenresState
 import com.example.game_your_game.genres.domain.model.Genre
+import com.example.game_your_game.genres.presentation.intent.GenresState
 
-private const val ERROR_MESSAGE = "Something wrong ... try again"
+private const val ERROR_MESSAGE = "Something wrong ... try again"//
 
 @Composable
 fun GenresListContent(
+    modifier: Modifier = Modifier,
     state: GenresState,
     onGenreClick: (Genre) -> Unit,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -58,14 +58,13 @@ fun GenresListContent(
                 }
             }
             is GenresState.Error -> ErrorWithRetry(
-                message = ERROR_MESSAGE,
+                message = state.message,
                 onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
-            is GenresState.Empty -> Text(
-                text = state.message,
-                style = MaterialTheme.typography.bodyLarge,
-                color = TextSecondary,
+            is GenresState.Empty -> ErrorWithRetry(
+                message = state.message,
+                onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -74,9 +73,9 @@ fun GenresListContent(
 
 @Composable
 private fun ErrorWithRetry(
+    modifier: Modifier = Modifier,
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
@@ -89,7 +88,7 @@ private fun ErrorWithRetry(
             color = TextSecondary
         )
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text("Retry")//
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.game_your_game.gamedetails
+package com.example.game_your_game.gamedetails.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.game_your_game.core.theme.ScreenBackground
-import com.example.game_your_game.gamedetails.components.GameDetailsContent
+import com.example.game_your_game.gamedetails.presentation.intent.GameDetailsScreenIntent
+import com.example.game_your_game.gamedetails.presentation.viewmodel.GameDetailsViewModel
+import com.example.game_your_game.gamedetails.presentation.components.GameDetailsContent
 
 @Composable
 fun GameDetailsScreen(

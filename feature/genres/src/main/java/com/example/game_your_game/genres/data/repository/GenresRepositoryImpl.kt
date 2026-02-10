@@ -26,6 +26,7 @@ class GenresRepositoryImpl @Inject constructor(
                 val entities = response.results?.map { it.toEntity() } ?: emptyList()
                 dao.insertAll(entities)
                 dao.getAllGenresOnce().map { it.toDomain() }
-            }
+            },
+            emptyCheck = { it.isEmpty() }
         )
 }

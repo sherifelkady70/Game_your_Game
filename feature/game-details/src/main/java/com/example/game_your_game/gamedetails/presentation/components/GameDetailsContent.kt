@@ -1,4 +1,4 @@
-package com.example.game_your_game.gamedetails.components
+package com.example.game_your_game.gamedetails.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -24,7 +25,7 @@ import com.example.game_your_game.gamedetails.domain.model.GameDetails
 import com.example.game_your_game.core.theme.RatingHighlight
 import com.example.game_your_game.core.theme.TextPrimary
 import com.example.game_your_game.core.theme.TextSecondary
-import com.example.game_your_game.gamedetails.GameDetailsState
+import com.example.game_your_game.gamedetails.presentation.intent.GameDetailsState
 
 private const val ERROR_MESSAGE = "Something wrong ... try again"
 
@@ -43,6 +44,11 @@ fun GameDetailsContent(
             is GameDetailsState.Success -> GameDetailsBody(details = state.details)
             is GameDetailsState.Error -> ErrorWithRetry(
                 message = ERROR_MESSAGE,
+                onRetry = onRetry,
+                modifier = Modifier.padding(16.dp)
+            )
+            is GameDetailsState.Empty -> ErrorWithRetry(
+                message = state.message,
                 onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
@@ -129,7 +135,7 @@ private fun GameDetailsBody(
 private fun LabelValue(
     label: String,
     value: String,
-    valueColor: androidx.compose.ui.graphics.Color = TextPrimary
+    valueColor: Color = TextPrimary
 ) {
     Column {
         Text(

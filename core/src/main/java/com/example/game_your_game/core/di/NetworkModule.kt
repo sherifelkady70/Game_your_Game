@@ -15,14 +15,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://api.rawg.io/api/"
-
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        @RawgApiKey apiKey: String
+        @RawgApiKey apiKey: String,
     ): OkHttpClient {
-        val key = (apiKey).takeIf { it.isNotBlank() && it != "null" } ?: ""
+        val key = (apiKey).takeIf { it.isNotBlank()}.orEmpty()
         return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -46,8 +44,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+
+    fun provideRetrofit(okHttpClient: OkHttpClient , @BASE_URL baseUrl: String): Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
