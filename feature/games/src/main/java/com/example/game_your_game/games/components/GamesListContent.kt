@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,11 +25,14 @@ import com.example.game_your_game.core.theme.TextSecondary
 import com.example.game_your_game.games.GamesListState
 import com.example.game_your_game.games.domain.model.Game
 
+private const val ERROR_MESSAGE = "Something wrong ... try again"
+
 @Composable
 fun GamesListContent(
     state: GamesListState,
     onGameClick: (Game) -> Unit,
     onLoadMore: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -89,19 +93,33 @@ fun GamesListContent(
                     }
                 }
             }
-            is GamesListState.Error -> {
-                Column(
-                    modifier = Modifier.padding(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = state.message,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextSecondary
-                    )
-                }
-            }
+            is GamesListState.Error -> ErrorWithRetry(
+                message = ERROR_MESSAGE,
+                onRetry = onRetry,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ErrorWithRetry(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = TextSecondary
+        )
+        Button(onClick = onRetry) {
+            Text("Retry")
         }
     }
 }

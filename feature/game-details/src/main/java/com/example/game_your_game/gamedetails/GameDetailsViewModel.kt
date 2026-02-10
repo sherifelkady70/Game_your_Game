@@ -35,7 +35,13 @@ class GameDetailsViewModel @Inject constructor(
         loadDetails()
     }
 
-    fun loadDetails() {
+    fun setIntent(action: GameDetailsScreenIntent) {
+        when (action) {
+            GameDetailsScreenIntent.OnRetry -> loadDetails()
+        }
+    }
+
+    private fun loadDetails() {
         viewModelScope.launch {
             _state.update { GameDetailsState.Loading }
             getGameDetailsUseCase(gameId).collect { result ->

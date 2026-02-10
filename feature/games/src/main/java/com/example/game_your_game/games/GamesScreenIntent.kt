@@ -1,5 +1,6 @@
 package com.example.game_your_game.games
 
-sealed class GamesScreenIntent{
-    object OnLoadMore : GamesScreenIntent()
+sealed class GamesScreenIntent {
+    data object OnLoadMore : GamesScreenIntent()
+    data object OnRetry : GamesScreenIntent()
 }

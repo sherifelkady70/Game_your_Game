@@ -19,6 +19,7 @@ fun GameDetailsScreen(
 
     GameDetailsContent(
         state = state,
+        onRetry = { viewModel.setIntent(GameDetailsScreenIntent.OnRetry) },
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)

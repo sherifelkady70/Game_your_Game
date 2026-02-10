@@ -25,6 +25,7 @@ fun GenresScreen(
         onGenreClick = { genre ->
             navController.navigate(NavRoutes.gamesList(genre.id))
         },
+        onRetry = { viewModel.setIntent(GenresScreenIntent.OnRetry) },
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)

@@ -42,9 +42,10 @@ class GamesListViewModel @Inject constructor(
         loadGames()
     }
 
-    fun setIntent(action : GamesScreenIntent){
-        when(action){
-            is GamesScreenIntent.OnLoadMore -> loadMoreGames()
+    fun setIntent(action: GamesScreenIntent) {
+        when (action) {
+            GamesScreenIntent.OnLoadMore -> loadMoreGames()
+            GamesScreenIntent.OnRetry -> loadGames()
         }
     }
     fun loadGames() {

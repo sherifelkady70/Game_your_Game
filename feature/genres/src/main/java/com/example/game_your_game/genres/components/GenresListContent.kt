@@ -15,14 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.game_your_game.genres.domain.model.Genre
 import com.example.game_your_game.core.theme.TextSecondary
 import com.example.game_your_game.genres.GenresState
+import com.example.game_your_game.genres.domain.model.Genre
+
+private const val ERROR_MESSAGE = "Something wrong ... try again"
 
 @Composable
 fun GenresListContent(
     state: GenresState,
     onGenreClick: (Genre) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -54,31 +57,39 @@ fun GenresListContent(
                     }
                 }
             }
-            is GenresState.Error -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = state.message,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TextSecondary
-                    )
+            is GenresState.Error -> ErrorWithRetry(
+                message = ERROR_MESSAGE,
+                onRetry = onRetry,
+                modifier = Modifier.padding(16.dp)
+            )
+            is GenresState.Empty -> Text(
+                text = state.message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = TextSecondary,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
 
-//                    Button(
-//                        onClick = onClick,
-//                        colors = ButtonDefaults.buttonColors(
-//                            containerColor = Color.White,
-//                            contentColor = Color.Black
-//                        ),
-//                        shape = RoundedCornerShape(10.dp)
-//                    ) {
-//                        Text(text = text)
-//                    }
-                }
-            }
-
-            is GenresState.Empty -> TODO()
+@Composable
+private fun ErrorWithRetry(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = TextSecondary
+        )
+        Button(onClick = onRetry) {
+            Text("Retry")
         }
     }
 }
