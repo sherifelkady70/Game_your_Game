@@ -37,13 +37,6 @@ class GenresViewModel @Inject constructor(
         loadGenres()
     }
 
-//    fun setAction(action: GenresIntent) {
-//        when (action) {
-//            is GenresIntent.GenreClicked -> {
-//                genreClicked(action.genreId)
-//            }
-//        }
-//    }
     private fun loadGenres() {
         viewModelScope.launch {
             _state.update { GenresState.Loading }
@@ -64,8 +57,5 @@ class GenresViewModel @Inject constructor(
         }
     }
 
-//    private fun genreClicked(genreId : Int) {
-//        navController.navigate(NavRoutes.gamesList(genreId))
-//    }
 
 }

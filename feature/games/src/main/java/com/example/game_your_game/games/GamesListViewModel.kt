@@ -83,20 +83,21 @@ class GamesListViewModel @Inject constructor(
         ) return
 
         viewModelScope.launch {
+            val prevSize = (current as GamesListState.Success).games.size
             _state.update {
                 (it as? GamesListState.Success)?.copy(isLoadingMore = true) ?: it
             }
             getGamesByGenreUseCase(genreId, currentPage + 1).collect { result ->
                 when (result) {
                     is NetworkStateResource.Success -> {
-                        val newList = result.data as List<Game>
+                        val fullList = result.data as List<Game>
                         currentPage += 1
+                        val newChunkSize = fullList.size - prevSize
                         _state.update {
-                            val prev = it as? GamesListState.Success ?: return@update it
                             GamesListState.Success(
-                                games = prev.games + newList,
+                                games = fullList,
                                 isLoadingMore = false,
-                                hasMore = newList.size >= PAGE_SIZE
+                                hasMore = newChunkSize >= PAGE_SIZE
                             )
                         }
                     }
