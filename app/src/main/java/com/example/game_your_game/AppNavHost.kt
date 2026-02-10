@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.game_your_game.core.navigation.NavRoutes
-import com.example.game_your_game.gamedetails.GameDetailsScreen
-import com.example.game_your_game.games.GamesListScreen
-import com.example.game_your_game.genres.GenresScreen
+import com.example.game_your_game.gamedetails.presentation.screen.GameDetailsScreen
+import com.example.game_your_game.games.presentation.screen.GamesListScreen
+import com.example.game_your_game.genres.presentation.screen.GenresScreen
 
 @Composable
 fun AppNavHost(

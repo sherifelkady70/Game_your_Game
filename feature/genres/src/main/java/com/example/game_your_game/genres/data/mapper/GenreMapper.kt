@@ -1,23 +1,28 @@
 package com.example.game_your_game.genres.data.mapper
 
 import com.example.game_your_game.genres.data.local.entity.GenreEntity
+import javax.inject.Inject
 import com.example.game_your_game.genres.data.remote.dto.GenreDto
 import com.example.game_your_game.genres.domain.model.Genre
 
-fun GenreDto.toDomain(): Genre = Genre(
-    id = id,
-    name = name.orEmpty(),
-    slug = slug.orEmpty()
-)
 
-fun GenreDto.toEntity(): GenreEntity = GenreEntity(
-    id = id,
-    name = name.orEmpty(),
-    slug = slug.orEmpty()
-)
 
-fun GenreEntity.toDomain(): Genre = Genre(
-    id = id,
-    name = name,
-    slug = slug
-)
+class GenreMapperImpl @Inject constructor() : GenreMapper {
+    override fun mapToDomain(dto: GenreDto): Genre = Genre(
+        id = dto.id,
+        name = dto.name.orEmpty(),
+        slug = dto.slug.orEmpty()
+    )
+
+    override fun mapToEntity(dto: GenreDto): GenreEntity = GenreEntity(
+        id = dto.id,
+        name = dto.name.orEmpty(),
+        slug = dto.slug.orEmpty()
+    )
+
+    override fun mapToDomain(entity: GenreEntity): Genre = Genre(
+        id = entity.id,
+        name = entity.name,
+        slug = entity.slug
+    )
+}
