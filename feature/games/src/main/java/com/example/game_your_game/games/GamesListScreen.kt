@@ -26,6 +26,7 @@ fun GamesListScreen(
             navController.navigate(NavRoutes.gameDetails(game.id))
         },
         onLoadMore = { viewModel.setIntent(GamesScreenIntent.OnLoadMore) },
+        onRetry = { viewModel.setIntent(GamesScreenIntent.OnRetry) },
         modifier = modifier
             .fillMaxSize()
             .background(ScreenBackground)

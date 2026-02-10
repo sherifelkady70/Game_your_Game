@@ -3,13 +3,14 @@ package com.example.game_your_game.gamedetails.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,9 +26,12 @@ import com.example.game_your_game.core.theme.TextPrimary
 import com.example.game_your_game.core.theme.TextSecondary
 import com.example.game_your_game.gamedetails.GameDetailsState
 
+private const val ERROR_MESSAGE = "Something wrong ... try again"
+
 @Composable
 fun GameDetailsContent(
     state: GameDetailsState,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -37,13 +41,33 @@ fun GameDetailsContent(
         when (state) {
             is GameDetailsState.Loading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             is GameDetailsState.Success -> GameDetailsBody(details = state.details)
-            is GameDetailsState.Error -> {
-                Text(
-                    text = state.message,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = TextSecondary
-                )
-            }
+            is GameDetailsState.Error -> ErrorWithRetry(
+                message = ERROR_MESSAGE,
+                onRetry = onRetry,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ErrorWithRetry(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = TextSecondary
+        )
+        Button(onClick = onRetry) {
+            Text("Retry")
         }
     }
 }

@@ -2,8 +2,6 @@ package com.example.game_your_game.genres
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.game_your_game.core.navigation.NavRoutes
 import com.example.game_your_game.core.utilits.NetworkStateResource
 import com.example.game_your_game.genres.GenresState.*
 import com.example.game_your_game.genres.domain.model.Genre
@@ -35,6 +33,12 @@ class GenresViewModel @Inject constructor(
 
     init {
         loadGenres()
+    }
+
+    fun setIntent(action: GenresScreenIntent) {
+        when (action) {
+            GenresScreenIntent.OnRetry -> loadGenres()
+        }
     }
 
     private fun loadGenres() {
