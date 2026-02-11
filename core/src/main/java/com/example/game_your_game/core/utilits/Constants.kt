@@ -26,4 +26,5 @@ object Constants {
 
     const val RELEASE_DATE = "Release date"
 
+    const val LOAD_MORE_THRESHOLD = 2
 }

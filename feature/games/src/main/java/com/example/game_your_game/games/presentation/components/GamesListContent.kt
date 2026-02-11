@@ -15,9 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,7 +32,7 @@ fun GamesListContent(
     modifier: Modifier = Modifier,
     state: GamesListState,
     onGameClick: (Game) -> Unit,
-    onLoadMore: () -> Unit,
+    onScrollPosition: (lastVisibleIndex: Int, totalItems: Int) -> Unit,
     onRetry: () -> Unit,
 ) {
     Box(
@@ -50,20 +48,14 @@ fun GamesListContent(
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
-                } else {//
+                } else {
                     val listState = rememberLazyListState()
-                    val shouldLoadMore by remember {
-                        derivedStateOf {
-                            val layoutInfo = listState.layoutInfo
-                            val totalItems = layoutInfo.totalItemsCount
-                            val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                            totalItems > 0 && lastVisibleIndex >= totalItems - 2
-                        }
-                    }
-                    LaunchedEffect(shouldLoadMore, state.isLoadingMore, state.hasMore) {
-                        if (shouldLoadMore && state.hasMore && !state.isLoadingMore) {
-                            onLoadMore()
-                        }
+                    LaunchedEffect(listState) {
+                        snapshotFlow { listState.layoutInfo }
+                            .collect { info ->
+                                val last = info.visibleItemsInfo.lastOrNull()?.index ?: 0
+                                onScrollPosition(last, info.totalItemsCount)
+                            }
                     }
                     LazyColumn(
                         state = listState,

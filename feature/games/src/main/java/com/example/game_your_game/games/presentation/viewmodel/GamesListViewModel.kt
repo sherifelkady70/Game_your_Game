@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.game_your_game.core.utilits.Constants
 import com.example.game_your_game.core.utilits.NetworkStateResource
 import com.example.game_your_game.games.presentation.intent.GamesScreenIntent
-import com.example.game_your_game.games.domain.model.Game
 import com.example.game_your_game.games.domain.usecase.GetGamesByGenreUseCase
 import com.example.game_your_game.games.presentation.intent.GamesListState
+import com.example.game_your_game.games.presentation.intent.GamesScreenEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,16 +33,41 @@ class GamesListViewModel @Inject constructor(
     private val _state = MutableStateFlow<GamesListState>(GamesListState.Loading)
     val state: StateFlow<GamesListState> = _state.asStateFlow()
 
+    private val _viewEffect: Channel<GamesScreenEffect> = Channel()
+    val viewEffect = _viewEffect.receiveAsFlow()
+
+    private fun sendOutput(action: () -> GamesScreenEffect) {
+        viewModelScope.launch {
+            _viewEffect.send(action())
+        }
+    }
+
+
     init {
         loadGames()
     }
 
     fun setIntent(action: GamesScreenIntent) {
         when (action) {
-            GamesScreenIntent.OnLoadMore -> loadMoreGames()
             GamesScreenIntent.OnRetry -> loadGames()
+            is GamesScreenIntent.OnScrollPosition -> loadMore(
+                lastVisibleIndex = action.lastVisibleIndex,
+                totalItems = action.totalItems
+            )
+
+            is GamesScreenIntent.OnGameClicked -> sendOutput { GamesScreenEffect.NavigateToGameDetails(action.gameId) }
         }
     }
+
+    private fun loadMore(lastVisibleIndex: Int, totalItems: Int) {
+        val current = _state.value
+        if (current !is GamesListState.Success) return
+        if (current.isLoadingMore || !current.hasMore) return
+        if (totalItems <= 0) return
+        if (lastVisibleIndex < totalItems - Constants.LOAD_MORE_THRESHOLD) return
+        loadMoreGames()
+    }
+
     private fun loadGames() {
         viewModelScope.launch {
             currentPage = 1
@@ -48,7 +75,7 @@ class GamesListViewModel @Inject constructor(
             getGamesByGenreUseCase(genreId, currentPage).collect { result ->
                 when (result) {
                     is NetworkStateResource.Success -> {
-                        val list = result.data as List<Game>
+                        val list = result.data
                         _state.update {
                             GamesListState.Success(
                                 games = list,
