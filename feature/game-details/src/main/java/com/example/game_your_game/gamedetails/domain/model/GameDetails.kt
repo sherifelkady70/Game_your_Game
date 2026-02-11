@@ -5,6 +5,6 @@ data class GameDetails(
     val name: String,
     val imageUrl: String?,
     val releaseDate: String?,
-    val rating: Double?,
+    val rating: String?,
     val description: String?
 )

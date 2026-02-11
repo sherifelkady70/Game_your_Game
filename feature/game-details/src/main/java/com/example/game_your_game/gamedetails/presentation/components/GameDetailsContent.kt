@@ -25,15 +25,15 @@ import com.example.game_your_game.gamedetails.domain.model.GameDetails
 import com.example.game_your_game.core.theme.RatingHighlight
 import com.example.game_your_game.core.theme.TextPrimary
 import com.example.game_your_game.core.theme.TextSecondary
+import com.example.game_your_game.core.utilits.Constants
 import com.example.game_your_game.gamedetails.presentation.intent.GameDetailsState
 
-private const val ERROR_MESSAGE = "Something wrong ... try again"
 
 @Composable
 fun GameDetailsContent(
+    modifier: Modifier = Modifier,
     state: GameDetailsState,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    onRetry: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -43,7 +43,7 @@ fun GameDetailsContent(
             is GameDetailsState.Loading -> CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             is GameDetailsState.Success -> GameDetailsBody(details = state.details)
             is GameDetailsState.Error -> ErrorWithRetry(
-                message = ERROR_MESSAGE,
+                message = state.message,
                 onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
@@ -73,7 +73,7 @@ private fun ErrorWithRetry(
             color = TextSecondary
         )
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(Constants.RETRY)
         }
     }
 }
@@ -107,17 +107,17 @@ private fun GameDetailsBody(
         )
         Spacer(modifier = Modifier.height(12.dp))
         details.releaseDate?.let { date ->
-            LabelValue(label = "Release date", value = date)
+            LabelValue(label = Constants.RELEASE_DATE, value = date)
             Spacer(modifier = Modifier.height(8.dp))
         }
         details.rating?.let { rating ->
-            LabelValue(label = "Rating", value = String.format("%.1f", rating), valueColor = RatingHighlight)
+            LabelValue(label = Constants.RATING, value = rating, valueColor = RatingHighlight)
             Spacer(modifier = Modifier.height(8.dp))
         }
         if (!details.description.isNullOrBlank()) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Description",
+                text = Constants.DESCRIPTION,
                 style = MaterialTheme.typography.labelMedium,
                 color = TextSecondary
             )

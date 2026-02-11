@@ -4,7 +4,7 @@ import com.example.game_your_game.gamedetails.data.local.entity.GameDetailsEntit
 import javax.inject.Inject
 import com.example.game_your_game.gamedetails.data.remote.dto.GameDetailsDto
 import com.example.game_your_game.gamedetails.domain.model.GameDetails
-
+import java.util.Locale
 
 
 class GameDetailsMapperImpl @Inject constructor() : GameDetailsMapper {
@@ -13,7 +13,7 @@ class GameDetailsMapperImpl @Inject constructor() : GameDetailsMapper {
         name = dto.name.orEmpty(),
         imageUrl = dto.backgroundImage,
         releaseDate = dto.released,
-        rating = dto.rating,
+        rating = String.format(Locale.US, "%.1f", dto.rating),
         description = (dto.descriptionRaw ?: dto.description).orEmpty()
     )
 
@@ -31,7 +31,7 @@ class GameDetailsMapperImpl @Inject constructor() : GameDetailsMapper {
         name = entity.name,
         imageUrl = entity.imageUrl,
         releaseDate = entity.releaseDate,
-        rating = entity.rating,
+        rating = entity.rating.toString(),
         description = entity.description
     )
 }

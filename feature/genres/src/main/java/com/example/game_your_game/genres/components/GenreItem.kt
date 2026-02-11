@@ -16,9 +16,9 @@ import com.example.game_your_game.core.theme.TextPrimary
 
 @Composable
 fun GenreItem(
+    modifier: Modifier = Modifier,
     genre: Genre,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier

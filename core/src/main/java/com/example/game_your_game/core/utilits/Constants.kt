@@ -18,5 +18,12 @@ object Constants {
 
      const val PAGE_SIZE = 10
 
+    const val RETRY = "retry"
+
+    const val DESCRIPTION = "description"
+
+    const val RATING = "Rating"
+
+    const val RELEASE_DATE = "Release date"
 
 }

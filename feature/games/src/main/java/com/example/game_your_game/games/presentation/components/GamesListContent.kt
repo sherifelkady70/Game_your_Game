@@ -20,14 +20,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.game_your_game.core.theme.GameYourGameTheme
 import com.example.game_your_game.core.theme.TextSecondary
+import com.example.game_your_game.games.R
 import com.example.game_your_game.games.domain.model.Game
 import com.example.game_your_game.games.presentation.intent.GamesListState
 
-private const val ERROR_MESSAGE = "Something wrong ... try again"
 @Composable
 fun GamesListContent(
     modifier: Modifier = Modifier,
@@ -45,7 +46,7 @@ fun GamesListContent(
             is GamesListState.Success -> {
                 if (state.games.isEmpty()) {
                     Text(
-                        text = "No games found",//
+                        text = stringResource(R.string.no_games_found),
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
@@ -78,7 +79,7 @@ fun GamesListContent(
                             )
                         }
                         if (state.isLoadingMore) {
-                            item(key = "loading_more") {
+                            item(key = R.string.loading_more) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -95,7 +96,7 @@ fun GamesListContent(
                 }
             }
             is GamesListState.Error -> ErrorWithRetry(
-                message = ERROR_MESSAGE,
+                message = state.message,
                 onRetry = onRetry,
                 modifier = Modifier.padding(16.dp)
             )
@@ -125,7 +126,7 @@ private fun ErrorWithRetry(
             color = TextSecondary
         )
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(stringResource(R.string.retry))
         }
     }
 }

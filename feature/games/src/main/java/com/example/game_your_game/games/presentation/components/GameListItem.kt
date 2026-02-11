@@ -1,4 +1,4 @@
-package com.example.game_your_game.games.components
+package com.example.game_your_game.games.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,9 +23,9 @@ import com.example.game_your_game.core.theme.TextPrimary
 
 @Composable
 fun GameListItem(
+    modifier: Modifier = Modifier,
     game: Game,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -58,7 +58,7 @@ fun GameListItem(
             )
             game.rating?.let { rating ->
                 Text(
-                    text = String.format("%.1f", rating),
+                    text = String.format("%.1f", rating),//mapper or VM
                     style = MaterialTheme.typography.labelMedium,
                     color = RatingHighlight
                 )

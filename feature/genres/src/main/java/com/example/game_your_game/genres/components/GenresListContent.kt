@@ -14,12 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.game_your_game.core.theme.TextSecondary
+import com.example.game_your_game.genres.R
 import com.example.game_your_game.genres.domain.model.Genre
 import com.example.game_your_game.genres.presentation.intent.GenresState
 
-private const val ERROR_MESSAGE = "Something wrong ... try again"//
 
 @Composable
 fun GenresListContent(
@@ -37,7 +38,7 @@ fun GenresListContent(
             is GenresState.Success -> {
                 if (state.genres.isEmpty()) {
                     Text(
-                        text = "No genres found",
+                        text = stringResource( R.string.no_genre_found),
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
@@ -88,7 +89,7 @@ private fun ErrorWithRetry(
             color = TextSecondary
         )
         Button(onClick = onRetry) {
-            Text("Retry")//
+            Text(stringResource( R.string.retry))
         }
     }
 }
