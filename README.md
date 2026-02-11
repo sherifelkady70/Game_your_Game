@@ -38,7 +38,7 @@ Each layer and the main libraries used:
 
 ## Architecture
 
-### Architecture choices (why)
+### Architecture choices 
 
 - **Feature modules** – Clear boundaries (genres, games, game-details), easier to test and scale; features depend only on `core`, not on each other.
 - **Clean-style layers per feature** – Presentation (UI + ViewModel) → Domain (models, repository interface, use cases) → Data (API, Room, mappers, repository impl). Domain stays free of frameworks and is easy to unit test.
@@ -145,4 +145,3 @@ So the app always shows loading, optionally cached data, then network result or 
 ./gradlew :feature:genres:testDebugUnitTest :feature:games:testDebugUnitTest :feature:game-details:testDebugUnitTest
 ```
 
-Requires a JDK (e.g. 11 or 17) configured for the project.
